@@ -1,0 +1,6 @@
+MANIFEST
+Makefile.PL
+RAD50.pm
+Readme
+t/basic.t
+META.yml                                 Module meta-data (added by MakeMaker)
