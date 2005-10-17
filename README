@@ -1,0 +1,25 @@
+Convert::Rad50 version 0.002
+
+This piece of retrocomputing converts between ASCII subset and Rad50,
+an encoding used on at least the RSX-11 and RT-11 operating systems.
+
+There are two subroutines/methods (depending on whether you call them
+directly or not): encode and decode. Nothing is exported by default,
+since both names strike me as candidates for collision.
+
+This module is installable by the usual incantation:
+
+    gunzip Convert-Rad50-9.999.tar.gz
+    tar -xf Convert-Rad50-9.999.tar
+    perl Makefile.PL
+    make
+    make test
+    make install
+
+Of course, since it's pure Perl, you can just expand the kit and drop
+Rad50.pm in the Convert directory in the appropriate place in your
+@INC directories.
+
+I have no idea what anyone would want to use this for.
+
+Tom Wyant

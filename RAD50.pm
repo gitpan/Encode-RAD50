@@ -74,7 +74,7 @@ use base qw{Encode::Encoding};
 
 use vars qw{$VERSION};
 
-$VERSION = 0.001;
+$VERSION = '0.002';
 
 use Carp;
 use Encode qw{:fallback_all};
