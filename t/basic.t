@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-use Fcntl qw{SEEK_SET};
 use File::Temp;
 use Test;
 
@@ -83,9 +82,9 @@ while (@tests) {
     $test_num++;
     print "# Test $test_num - Print '$string' to file, and check output.\n";
     my ($buffer, $skip2) = ('0', $skip);
-    seek $fh, $origin, SEEK_SET;
+    seek $fh, $origin, 0;
     print $fh $string;
-    seek $fh, $origin, SEEK_SET;
+    seek $fh, $origin, 0;
     binmode $fh, ':raw';
     read $fh, $buffer, $bytes;
     $buffer = unpack ($tplt, $buffer);
@@ -94,7 +93,7 @@ while (@tests) {
 
     $test_num++;
     print "# Test $test_num - Read file in @{[ENCODING]}, and check value.\n";
-    seek $fh, $origin, SEEK_SET;
+    seek $fh, $origin, 0;
     binmode $fh, ":encoding(@{[ENCODING]})";
     read $fh, $buffer, length ($string);
     skip ($skip2, $buffer eq $output);

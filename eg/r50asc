@@ -1,0 +1,21 @@
+#!/usr/local/bin/perl
+
+use strict;
+use warnings;
+
+use Encode::RAD50;
+
+use open IN => ':encoding(rad50)';
+binmode (STDIN, 'encoding(rad50)');
+
+Encode::RAD50->silence_warnings (1);
+
+while (<>) {
+    print;
+}
+__END__
+
+Copyright 2006 by Thomas R. Wyant, III. All rights reserved.
+
+This script is free software; you can use it, redistribute it
+and/or modify it under the same terms as Perl itself.

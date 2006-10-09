@@ -1,12 +1,20 @@
-# http://module-build.sourceforge.net/META-spec.html
-#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
-name:         Encode-RAD50
-version:      0.002
-version_from: RAD50.pm
-installdirs:  site
+---
+name: Encode-RAD50
+version: 0.003
+author:
+  - Tom Wyant (wyant at cpan dot org)
+abstract: Convert to and from the Rad50 character set
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
 requires:
-    Encode:                        0
-    Encode::Encoding:              0
-
-distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.30
+  Encode: 0
+  Encode::Encoding: 0
+provides:
+  Encode::RAD50:
+    file: lib/Encode/RAD50.pm
+    version: 0.003
+generated_by: Module::Build version 0.2805
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2

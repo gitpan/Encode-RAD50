@@ -6,12 +6,12 @@ my $vers = '';
 
 WriteMakefile (
 	NAME => 'Encode::RAD50',
-	VERSION_FROM => 'RAD50.pm',
+	VERSION_FROM => 'lib/Encode/RAD50.pm',
 	PREREQ_PM => {
 			Encode	=> 0,
 			Encode::Encoding => 0,
 			},
-#	'linkext' => {LINKTYPE => ''},
+	PL_FILES => {},	# Prevent old MakeMaker from running Build.PL
 	'dist' => {COMPRESS => 'gzip', SUFFIX => 'gz'},
 	$] >= 5.005 ? (
 		AUTHOR => 'Tom Wyant (wyant@cpan.org)',

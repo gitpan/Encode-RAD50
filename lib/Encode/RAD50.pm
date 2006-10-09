@@ -21,18 +21,17 @@ is not case-sensitive.
 
 =head1 DESCRIPTION
 
-This package is designed to convert to and from the Rad50 character
-set. It's really a piece of retrocomputing, since this character set
-was, to the best of my knowledge, only used for the Digital (R.I.P.)
-PDP-11 computer, under (at least) the RSX-11 and RT-11 operating
-systems.
+This package is designed to convert to and from the Rad50 character set.
+It's really a piece of retrocomputing, since this character set was, to
+the best of my knowledge, only used for the Digital (R.I.P.) PDP-11
+computer, under (at least) the RSX-11 (including IAS and P/OS), RT-11,
+RSTS (-11 and /E)  operating systems.
 
 Rad50 is a way to squeeze three characters into two bytes, by
-restricting the character set to upper-case 7-bit ASCII letters,
-digits, space, "." and "$". There is also an encoding for what was
-called "the illegal character." In the language of the Encode modules
-this is the substitution character, and its ASCII representation is
-"?".
+restricting the character set to upper-case 7-bit ASCII letters, digits,
+space, "." and "$". There is also an encoding for what was called "the
+illegal character." In the language of the Encode modules this is the
+substitution character, and its ASCII representation is "?".
 
 When more than three characters are encoded, the first three go in the
 first two bytes, the second three in the second two, and so on.
@@ -72,9 +71,7 @@ use warnings;
 
 use base qw{Encode::Encoding};
 
-use vars qw{$VERSION};
-
-$VERSION = '0.002';
+our $VERSION = '0.003';
 
 use Carp;
 use Encode qw{:fallback_all};
@@ -237,19 +234,23 @@ Steve Lionel's posting of the VAX Fortran IRAD50 to comp.os.vms provided
 the model for what encode should do if the length of the input string was
 not a multiple of three.
 
+Brian, for flushing out more operating systems that used RAD50.
+
+Nora Narum, for helping with RSX CVT syntax.
+
 =head1 AUTHOR
 
 Thomas R. Wyant, III (F<wyant at cpan dot org>)
 
 =head1 COPYRIGHT
 
-Copyright 2005 by Thomas R. Wyant, III
-(F<wyant at cpan dot org>)
+Copyright 2005, 2006 by Thomas R. Wyant, III
+(F<wyant at cpan dot org>). All rights reserved.
 
 This module is free software; you can use it, redistribute it
 and/or modify it under the same terms as Perl itself.
 
-PDP-11, RSX-11, RSX-11M+, and RT-11 are trademarks of Hewlett-Packard
-Development Company, L.P.
+PDP-11, RSTS-11, RSTS/E,  RSX-11, RSX-11M+, P/OS and RT-11 are
+trademarks of Hewlett-Packard Development Company, L.P.
 
 =cut

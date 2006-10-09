@@ -1,0 +1,40 @@
+#!/usr/local/bin/perl
+
+use strict;
+use warnings;
+
+use Encode::RAD50;
+use Getopt::Long;
+
+my %opt;
+
+my $usage = <<eod;
+
+Convert input to RAD50.
+
+usage: irad50 [options]
+
+Input is from STDIN, output to STDOUT. Valid options are:
+  -help
+    displays this text;
+  -quiet
+    supresses warnings on invalid characters;
+  -uppercase
+    folds input to upper case before conversion.
+
+Copyright 2006 by Thomas R. Wyant, III. All rights reserved.
+
+This script is free software; you can use it, redistribute it
+and/or modify it under the same terms as Perl itself.
+eod
+
+GetOptions (\%opt, qw{help quiet uppercase|uc}) or die $usage;
+$opt{help} and do {print $usage; exit};
+Encode::RAD50->silence_warnings ($opt{quiet});
+
+binmode (STDOUT, 'encoding(rad50)');
+while (<>) {
+    $_ = uc $_ if $opt{uppercase};
+    print
+}
+
