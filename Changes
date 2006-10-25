@@ -8,3 +8,6 @@
        Restructure kit (to lib/Encode/RAD50.pm).
        Add Build.PL.
        Add examples.
+ 0.004 24-Oct-2006 T. R. Wyant
+       Eliminate use of File::Temp in t/basic.t, since some ActivePerls
+       seem to have trouble with it. No other changes.

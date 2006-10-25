@@ -21,6 +21,8 @@ my @tests;
 
 use constant ENCODING => 'RAD50';
 
+my $filename = "tst$$.tmp";
+
 BEGIN {
 
 # Caveat: The code assumes we're dealing with exactly three characters.
@@ -53,7 +55,8 @@ ok ($loaded);
 
 my $fh;
 unless ($skip) {
-    $fh = File::Temp->new ();
+##    $fh = File::Temp->new ();
+    open ($fh, '+>', $filename);
     $skip = "Can't create temp file: $!" unless $fh;
     }
 my $origin = tell $fh unless $skip;
@@ -98,4 +101,7 @@ while (@tests) {
     read $fh, $buffer, length ($string);
     skip ($skip2, $buffer eq $output);
 
-    }
+}
+
+unlink $filename if -e $filename;
+
