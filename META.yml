@@ -1,6 +1,6 @@
 ---
 name: Encode-RAD50
-version: 0.004
+version: 0.005
 author:
   - Tom Wyant (wyant at cpan dot org)
 abstract: Convert to and from the Rad50 character set
@@ -13,8 +13,8 @@ requires:
 provides:
   Encode::RAD50:
     file: lib/Encode/RAD50.pm
-    version: 0.004
-generated_by: Module::Build version 0.2805
+    version: 0.005
+generated_by: Module::Build version 0.2808
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
   version: 1.2

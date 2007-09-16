@@ -11,3 +11,10 @@
  0.004 24-Oct-2006 T. R. Wyant
        Eliminate use of File::Temp in t/basic.t, since some ActivePerls
        seem to have trouble with it. No other changes.
+ 0.005 16-Sep-2007 T. R. Wyant
+       Rewrite t/basic.t again to use PerlIO, since ActivePerl still
+       had trouble with 0.004.
+       Update copyright.
+       Add explicit license statement.
+       Remove shebang lines from Build.PL, t/*.t, and make sure not
+       executable.

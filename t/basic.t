@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 use strict;
 use warnings;
 
@@ -21,28 +19,27 @@ my @tests;
 
 use constant ENCODING => 'RAD50';
 
-my $filename = "tst$$.tmp";
-
 BEGIN {
 
 # Caveat: The code assumes we're dealing with exactly three characters.
 
-@tests = (
-    '   ' => 0,
-    FOO => 10215,
-    BAR => 3258,
-    'A B' => 1602,
-    '  A' => 1,
-    ' AB' => 42,
-    'A#C' => 2763,	# Invalid, encodes as 'A?C'.
-    'AXM' => 2573,	# <cr><lf>
-    '  J' => 10,	# <lf>
-    );
+    @tests = (
+	'   ' => 0,
+	FOO => 10215,
+	BAR => 3258,
+	'A B' => 1602,
+	'  A' => 1,
+	' AB' => 42,
+	'A#C' => 2763,	# Invalid, encodes as 'A?C'.
+	'AXM' => 2573,	# <cr><lf>
+	'  J' => 10,	# <lf>
+	);
 
-$| = 1;
+    $| = 1;
 
-plan (tests => @tests * 2 + 2);
-print "# Test 1 - Loading the library.\n"}
+    plan (tests => @tests * 2 + 2);
+    print "# Test 1 - Loading the library.\n"
+}
 END {print "not ok 1\n" unless $loaded;}
 
 use Encode;
@@ -53,25 +50,26 @@ ok ($loaded);
 
 ######################### End of black magic.
 
-my $fh;
+my $written;
 unless ($skip) {
-##    $fh = File::Temp->new ();
-    open ($fh, '+>', $filename);
-    $skip = "Can't create temp file: $!" unless $fh;
-    }
-my $origin = tell $fh unless $skip;
+    open (my $fh, '>', \$written) or $skip = "PerlIO unsupported";
+}
 Encode::RAD50->silence_warnings (1);
 
 $test_num++;
 print "# Test $test_num - Put temp file in RAD50 mode.\n";
-skip ($skip, binmode $fh, ":encoding(@{[ENCODING]})");
+{
+    $written = '';
+    $skip or open (my $fh, '>', \$written);
+    skip ($skip, binmode $fh, ":encoding(@{[ENCODING]})");
+}
 
 while (@tests) {
     my $string = shift @tests;
     my $value = shift @tests;
     my $output = $string;
-    my $bytes = length ($string) * 2 / 3;	# assumes $string a multiple of 3.
-    my $tplt = 'n';		# 16 bits, big-endian. Assumes 3 characters only.
+    my $bytes = length ($string) * 2 / 3;  # assumes $string a multiple of 3.
+    my $tplt = 'n';		# 16 bits, big-endian. Assumes 3 chars only.
     $output =~ tr/A-Z0-9.$ /?/c;
 
     $test_num++;
@@ -85,23 +83,25 @@ while (@tests) {
     $test_num++;
     print "# Test $test_num - Print '$string' to file, and check output.\n";
     my ($buffer, $skip2) = ('0', $skip);
-    seek $fh, $origin, 0;
-    print $fh $string;
-    seek $fh, $origin, 0;
-    binmode $fh, ':raw';
-    read $fh, $buffer, $bytes;
-    $buffer = unpack ($tplt, $buffer);
+    my $fh;
+    my $written = '';
+    $skip2 or open ($fh, ">:encoding(@{[ENCODING]})", \$written)
+	or $skip2 = "Failed to open file: $!";
+    unless ($skip2) {
+	print $fh $string;
+	close $fh;
+	$buffer = unpack ($tplt, $written);
+    }
     print "#          File contained value $buffer\n";
-    skip ($skip, $buffer == $value);
+    print "#                Expected value $value\n";
+    skip ($skip2, $buffer == $value);
 
     $test_num++;
     print "# Test $test_num - Read file in @{[ENCODING]}, and check value.\n";
-    seek $fh, $origin, 0;
-    binmode $fh, ":encoding(@{[ENCODING]})";
-    read $fh, $buffer, length ($string);
+    unless ($skip2) {
+	open ($fh, "<:encoding(@{[ENCODING]})", \$written)
+	    or $skip2 = "Failed to reopen file: $!";
+	$skip2 or read $fh, $buffer, length ($string);
+    }
     skip ($skip2, $buffer eq $output);
-
 }
-
-unlink $filename if -e $filename;
-

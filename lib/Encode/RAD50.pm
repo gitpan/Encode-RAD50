@@ -71,7 +71,7 @@ use warnings;
 
 use base qw{Encode::Encoding};
 
-our $VERSION = '0.004';
+our $VERSION = '0.005';
 
 use Carp;
 use Encode qw{:fallback_all};
@@ -244,13 +244,16 @@ Thomas R. Wyant, III (F<wyant at cpan dot org>)
 
 =head1 COPYRIGHT
 
-Copyright 2005, 2006 by Thomas R. Wyant, III
+Copyright 2005, 2006, 2007 by Thomas R. Wyant, III
 (F<wyant at cpan dot org>). All rights reserved.
-
-This module is free software; you can use it, redistribute it
-and/or modify it under the same terms as Perl itself.
 
 PDP-11, RSTS-11, RSTS/E,  RSX-11, RSX-11M+, P/OS and RT-11 are
 trademarks of Hewlett-Packard Development Company, L.P.
+
+=head1 LICENSE
+
+This module is free software; you can use it, redistribute it
+and/or modify it under the same terms as Perl itself. Please see
+L<http://perldoc.perl.org/index-licence.html> for the current licenses.
 
 =cut
