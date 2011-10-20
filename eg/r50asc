@@ -15,7 +15,16 @@ while (<>) {
 }
 __END__
 
-Copyright 2006 by Thomas R. Wyant, III. All rights reserved.
+Copyright 2005-2007, 2011 by Thomas R. Wyant, III
+(F<wyant at cpan dot org>). All rights reserved.
 
-This script is free software; you can use it, redistribute it
-and/or modify it under the same terms as Perl itself.
+PDP-11, RSTS-11, RSTS/E,  RSX-11, RSX-11M+, P/OS and RT-11 are
+trademarks of Hewlett-Packard Development Company, L.P.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl 5.10.0. For more details, see the full text
+of the licenses in the directory LICENSES.
+
+This program is distributed in the hope that it will be useful, but
+without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.

@@ -71,7 +71,7 @@ use warnings;
 
 use base qw{Encode::Encoding};
 
-our $VERSION = '0.005';
+our $VERSION = '0.005_90';
 
 use Carp;
 use Encode qw{:fallback_all};
@@ -86,8 +86,8 @@ __PACKAGE__->Define ('RAD50', qr{^rad50$}i);
 my @r52asc = split '', ' ABCDEFGHIJKLMNOPQRSTUVWXYZ$.?0123456789';
 my %irad50;
 for (my $inx = 0; $inx < @r52asc; $inx++) {
-	$irad50{$r52asc[$inx]} = $inx;
-	}
+    $irad50{$r52asc[$inx]} = $inx;
+}
 
 my $subs_value = $irad50{SUBSTITUTE ()};
 delete $irad50{SUBSTITUTE ()};
@@ -103,10 +103,10 @@ my $chk_mod = ~0;	# Bits to mask in the check argument.
 #	telling anyone.
 
 sub _carp {
-my $check = shift;
-$check & DIE_ON_ERR and croak @_;
-$check & WARN_ON_ERR and carp @_;
-$check & RETURN_ON_ERR;
+    my ($check, @args) = @_;
+    $check & DIE_ON_ERR and croak @args;
+    $check & WARN_ON_ERR and carp @args;
+    return $check & RETURN_ON_ERR;
 }
 
 =item $string = $object->decode ($octets, $check)
@@ -117,36 +117,39 @@ subroutine exported by Encode.
 
 =cut
 
-sub decode ($$;$) {
-my ($self, undef, $check) = @_;
-$check ||= 0;
-$check &= $chk_mod;
-my $out = '';
-while (length ($_[1])) {
-    my ($bits) = unpack length $_[1] > 1 ? 'n1' : 'C1', $_[1];
-    if ($bits < MAX_WORD) {
-	my $treble = '';
-	for (my $inx = 0; $inx < 3; $inx++) {
-	    my $char = $bits % RADIX;
-	    $bits = ($bits - $char) / RADIX;
-	    $char = $r52asc[$char];
-	    $char eq SUBSTITUTE and
-		_carp ($check, "'$char' is an invalid character.") and
-		return $out;
-	    $treble = $char . $treble;
+# The Encode::Encoding documentation says that decode() SHOULD modify
+# its $octets argument (the one after $self) if the $check argument is
+# true. If perlio_ok() is true, SHOULD becomes MUST. Perl::Critic does
+# not want us to do this, so we need to silence it.
+
+sub decode {		## no critic (RequireArgUnpacking)
+    my ($self, undef, $check) = @_;
+    $check ||= 0;
+    $check &= $chk_mod;
+    my $out = '';
+    while (length ($_[1])) {
+	my ($bits) = unpack length $_[1] > 1 ? 'n1' : 'C1', $_[1];
+	if ($bits < MAX_WORD) {
+	    my $treble = '';
+	    for (my $inx = 0; $inx < 3; $inx++) {
+		my $char = $bits % RADIX;
+		$bits = ($bits - $char) / RADIX;
+		$char = $r52asc[$char];
+		$char eq SUBSTITUTE and
+		    _carp ($check, "'$char' is an invalid character.") and
+		    return $out;
+		$treble = $char . $treble;
 	    }
-	$out .= $treble;
+	    $out .= $treble;
+	} else {
+	    _carp ($check, sprintf ("0x%04x is an invalid value", $bits))
+		    and return $out;
+	    $out .= SUBSTITUTE x 3;
 	}
-      else {
-	_carp ($check, sprintf ("0x%04x is an invalid value", $bits))
-		and return $out;
-  	$out .= SUBSTITUTE x 3;
-	}
+    } continue {
+	substr ($_[1], 0, 2, '');
     }
-  continue {
-    substr ($_[1], 0, 2, '');
-    }
-return $out;
+    return $out;
 }
 
 
@@ -158,38 +161,46 @@ subroutine exported by Encode.
 
 =cut
 
-sub encode ($$;$) {
-my ($self, $string, $check) = @_;
-$check ||= 0;
-$check &= $chk_mod;
-length ($string) % 3 and
-    $string .= ' ' x (3 - length ($string) % 3);
-my @out;
-while (length ($_[1])) {
-    my $bits = 0;
-    foreach my $char (split '', substr ($string, 0, 3, '')) {
-	if (exists $irad50{$char}) {
-	    $bits = $bits * RADIX + $irad50{$char};
-	    }
-	  else {
-	    _carp ($check, "'$char' is an invalid character") and
-		return pack 'n*', @out;
-	    $bits = $bits * RADIX + $subs_value;
+# The Encode::Encoding documentation says that encode() SHOULD modify
+# its $string argument (the one after $self) if the $check argument is
+# true. If perlio_ok() is true, SHOULD becomes MUST. Perl::Critic does
+# not want us to do this, so we need to silence it.
+
+# Note that we copy $_[1] into $string and pad it to a multiple of 3
+# and work from that, because otherwise we get odd behavior on input
+# that is not a multiple of 3. But we strip characters from the original
+# argument as well.
+
+sub encode {		## no critic (RequireArgUnpacking)
+    my ($self, $string, $check) = @_;
+    $check ||= 0;
+    $check &= $chk_mod;
+    length ($string) % 3 and
+	$string .= ' ' x (3 - length ($string) % 3);
+    my @out;
+    while (length ($_[1])) {
+	my $bits = 0;
+	foreach my $char (split '', substr ($string, 0, 3, '')) {
+	    if (exists $irad50{$char}) {
+		$bits = $bits * RADIX + $irad50{$char};
+	    } else {
+		_carp ($check, "'$char' is an invalid character") and
+		    return pack 'n*', @out;
+		$bits = $bits * RADIX + $subs_value;
 	    }
 	}
-    push @out, $bits;
+	push @out, $bits;
+    } continue {
+	substr ($_[1], 0, 3, '');
     }
-  continue {
-    substr ($_[1], 0, 3, '');
-    }
-return pack 'n*', @out;
+    return pack 'n*', @out;
 }
 
 =item $old_val = Encode::RAD50->silence_warnings ($new_val)
 
 This class method causes Encode::RAD50 to ignore the WARN_ON_ERR
 flag. This is primarily for testing purposes, meaning that I couldn't
-figure out any other way to supress the warnings when testing the
+figure out any other way to suppress the warnings when testing the
 handling of invalid characters in PerlIO.
 
 If the argument is true, warnings are not generated even if the caller
@@ -203,11 +214,11 @@ setting is false.
 =cut
 
 sub silence_warnings {
-my $old = !($chk_mod & WARN_ON_ERR);
-@_ and $chk_mod = $_[0] ?
-    $chk_mod & ~WARN_ON_ERR :
-    $chk_mod | WARN_ON_ERR;
-$old;
+    my $old = !($chk_mod & WARN_ON_ERR);
+    @_ and $chk_mod = $_[0] ?
+	$chk_mod & ~WARN_ON_ERR :
+	$chk_mod | WARN_ON_ERR;
+    return $old;
 }
 
 1;
@@ -242,18 +253,20 @@ Nora Narum, for helping with RSX CVT syntax.
 
 Thomas R. Wyant, III (F<wyant at cpan dot org>)
 
-=head1 COPYRIGHT
+=head1 COPYRIGHT AND LICENSE
 
-Copyright 2005, 2006, 2007 by Thomas R. Wyant, III
+Copyright 2005-2007, 2011 by Thomas R. Wyant, III
 (F<wyant at cpan dot org>). All rights reserved.
 
 PDP-11, RSTS-11, RSTS/E,  RSX-11, RSX-11M+, P/OS and RT-11 are
 trademarks of Hewlett-Packard Development Company, L.P.
 
-=head1 LICENSE
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl 5.10.0. For more details, see the full text
+of the licenses in the directory LICENSES.
 
-This module is free software; you can use it, redistribute it
-and/or modify it under the same terms as Perl itself. Please see
-L<http://perldoc.perl.org/index-licence.html> for the current licenses.
+This program is distributed in the hope that it will be useful, but
+without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.
 
 =cut

@@ -1,24 +1,48 @@
-use Config;
+use 5.006;	# for 'our'.
+
+use strict;
+use warnings;
+
+use lib qw{ inc };
+
 use ExtUtils::MakeMaker;
+use My::Module::Meta;
 
-##my $vers = $] >= 5.008 ? '-5.8' : '';
-my $vers = '';
+(my $mmv = ExtUtils::MakeMaker->VERSION) =~ s/_//g;
 
-WriteMakefile (
-	NAME => 'Encode::RAD50',
-	VERSION_FROM => 'lib/Encode/RAD50.pm',
-	PREREQ_PM => {
-			Encode	=> 0,
-			Encode::Encoding => 0,
-			},
-	PL_FILES => {},	# Prevent old MakeMaker from running Build.PL
-	'dist' => {COMPRESS => 'gzip', SUFFIX => 'gz'},
-	$] >= 5.005 ? (
-		AUTHOR => 'Tom Wyant (wyant@cpan.org)',
-		ABSTRACT => 'Convert to and from the Rad50 character set',
-##		BINARY_LOCATION => "$Config{archname}$vers/Encode-RAD50.tar.gz",
-		(ExtUtils::MakeMaker->VERSION >= 6.31 ?
-		    (LICENSE => 'perl') : ())
-		) : (),
-	);
+my $meta = My::Module::Meta->new();
 
+my %args = (
+    NAME => 'Encode::RAD50',
+    VERSION_FROM => 'lib/Encode/RAD50.pm',
+    PREREQ_PM => $meta->requires(),
+    PL_FILES => {},	# Prevent old MakeMaker from running Build.PL
+    'dist' => {COMPRESS => 'gzip', SUFFIX => 'gz'},
+    AUTHOR => 'Tom Wyant (wyant@cpan.org)',
+    ABSTRACT => 'Convert to and from the Rad50 character set',
+);
+
+$mmv >= 6.31 and $args{LICENSE} = 'perl';
+
+if ( $mmv >= 6.4501 ) {
+    $args{META_ADD} = {
+	no_index => {
+	    directory => [ qw{ inc t xt } ],
+	},
+    };
+    $args{META_MERGE} = {
+	bugtracker => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Encode-RAD50',
+	resources => {
+	    license => 'http://dev.perl.org/licenses/',
+	},
+    };
+}
+
+$mmv >= 6.4701 and $args{MIN_PERL_VERSION} = $meta->requires_perl();
+
+$mmv >= 6.5501
+    and $args{BUILD_REQUIRES} = $meta->build_requires()
+    or $mmv >= 6.4501
+    and $args{META_MERGE}{build_requires} = $meta->build_requires();
+
+WriteMakefile (%args);

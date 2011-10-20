@@ -1,20 +1,37 @@
- 0.001 26-Feb-2005 T. R. Wyant
-       Initial release to CPAN.
- 0.002 15-Oct-2005 T. R. Wyant
-       I decide to play the CPANTS game. No change to functionality.
- 0.003 30-Sep-2006 T. R. Wyant
-       Acknowledge help finding more uses for RAD50 (Brian), and
-       cvt syntax (Nora Narum).
-       Restructure kit (to lib/Encode/RAD50.pm).
-       Add Build.PL.
-       Add examples.
- 0.004 24-Oct-2006 T. R. Wyant
-       Eliminate use of File::Temp in t/basic.t, since some ActivePerls
-       seem to have trouble with it. No other changes.
- 0.005 16-Sep-2007 T. R. Wyant
-       Rewrite t/basic.t again to use PerlIO, since ActivePerl still
-       had trouble with 0.004.
-       Update copyright.
-       Add explicit license statement.
-       Remove shebang lines from Build.PL, t/*.t, and make sure not
-       executable.
+0.005_90	20-Oct-2011	T. R. Wyant
+  Reorganize tests into distribution tests (t/*) and author tests
+    (xt/author/*). The POD tests go the latter place, plus new Perl
+    Critic and executable-bit tests. Author tests require Module::Build.
+  Eliminate prototypes on encode() and decode(). They probably weren't
+    doing anything anyway, since prototypes are ignored on method calls.
+  Require Perl 5.006 (for 'our'). Add strictures
+  Eliminate use of string eval to load modules.
+  Redid declared dependencies to reflect reality.
+  Eliminate unused variables.
+  Fixed warning on uninitialized $written variable.
+  Update to Perl-Foundation-Recommended license and copyright wording.
+
+0.005		16-Sep-2007	T. R. Wyant
+  Rewrite t/basic.t again to use PerlIO, since ActivePerl still
+    had trouble with 0.004.
+  Update copyright.
+  Add explicit license statement.
+  Remove shebang lines from Build.PL, t/*.t, and make sure not
+    executable.
+
+0.004		24-Oct-2006	T. R. Wyant
+  Eliminate use of File::Temp in t/basic.t, since some ActivePerls
+    seem to have trouble with it. No other changes.
+
+0.003		30-Sep-2006	T. R. Wyant
+  Acknowledge help finding more uses for RAD50 (Brian), and
+    cvt syntax (Nora Narum).
+  Restructure kit (to lib/Encode/RAD50.pm).
+  Add Build.PL.
+  Add examples.
+
+0.002		15-Oct-2005	T. R. Wyant
+  I decide to play the CPANTS game. No change to functionality.
+
+0.001		26-Feb-2005	T. R. Wyant
+  Initial release to CPAN.
