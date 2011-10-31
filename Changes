@@ -1,3 +1,6 @@
+0.006		31-Oct-2011	T. R. Wyant
+  No changes, other than version.
+
 0.005_90	20-Oct-2011	T. R. Wyant
   Reorganize tests into distribution tests (t/*) and author tests
     (xt/author/*). The POD tests go the latter place, plus new Perl
