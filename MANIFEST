@@ -18,6 +18,7 @@ t/basic.t
 xt/author/critic.t
 xt/author/perlcriticrc
 xt/author/executable.t
+xt/author/kwalitee.t
 xt/author/manifest.t
 xt/author/pod.t
 xt/author/pod_coverage.t

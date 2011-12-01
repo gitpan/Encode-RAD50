@@ -3,30 +3,38 @@ package main;
 use strict;
 use warnings;
 
-use Test;
+use Test::More 0.88;
 
-eval {
-    require ExtUtils::Manifest;
-    ExtUtils::Manifest->import (qw{manicheck filecheck});
-};
-my $skip = $@ ? 'Can not load ExtUtils::Manifest' : '';
+BEGIN {
 
-plan tests => 2;
-my $test = 0;
+    eval {
+	require ExtUtils::Manifest;
+	ExtUtils::Manifest->import( qw{ maniread } );
+	1;
+    } or do {
+	plan skip_all => 'ExtUtils::Manifest required.';
+    };
 
-foreach ([manicheck => 'Missing files per manifest'],
-    [filecheck => 'Files not in MANIFEST or MANIFEST.SKIP'],
-) {
-    my ($subr, $title) = @$_;
-    $test++;
-    my @got = $skip ? ('skipped') : ExtUtils::Manifest->$subr ();
-    print <<eod;
-#
-# Test $test - $title
-#      Expected: ''
-#           Got: '@got'
-eod
-    skip ($skip, @got == 0);
 }
+
+my $manifest = maniread ();
+
+my @check;
+foreach ( sort keys %{ $manifest } ) {
+    m/ \A bin \b /smx and next;
+    m/ \A eg \b /smx and next;
+    push @check, $_;
+}
+
+foreach my $file (@check) {
+    open (my $fh, '<', $file) or die "Unable to open $file: $!\n";
+    local $_ = <$fh>;
+    close $fh;
+    my @stat = stat $file;
+    my $executable = $stat[2] & oct( 111 ) || m/ \A \# ! .* perl /smx;
+    ok !$executable, "File $file is not executable";
+}
+
+done_testing;
 
 1;

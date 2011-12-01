@@ -1,3 +1,7 @@
+0.007		01-Dec-2011	T. R. Wyant
+  Convert most tests to Test::More. Require Test::More 0.88 for build.
+  Update GNU GPL in LICENSES/Copying to have current FSF address.
+
 0.006		31-Oct-2011	T. R. Wyant
   No changes, other than version.
 

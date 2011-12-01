@@ -3,16 +3,29 @@ package main;
 use strict;
 use warnings;
 
-use Test;
-
-
-my $test_num = 1;
-my %odd_os = map {$_ => 1} qw{};
-my $skip = $odd_os{$^O} ? "binmode doesn't work under $^O" : '';
-
-use constant ENCODING => 'RAD50';
-
 use Encode;
+use Test::More 0.88;
+
+{
+    my $written = '';
+    open my $fh, '>', \$written
+	or plan skip_all => 'PerlIO unsupported';
+    close $fh;
+}
+
+require_ok 'Encode::RAD50'
+    or BAIL_OUT "Can not continue without loading Encode::RAD50: $@";
+
+{
+    my $written = '';
+    open my $fh, '>:encoding(RAD50)', \$written;
+    ok binmode( $fh, ':encoding(RAD50)' ),
+	    q{open '>:encoding(RAD50)'}
+	or BAIL_OUT "Can not continue without binmode: $!";
+    close $fh;
+}
+
+Encode::RAD50->silence_warnings( 1 );
 
 my @tests = (
     '   ' => 0,
@@ -26,78 +39,40 @@ my @tests = (
     '  J' => 10,	# <lf>
 );
 
-my $loaded = eval {
-    require Encode::RAD50;
-    1;
-};
-
-if ($loaded) {
-    plan (tests => @tests * 2 + 2);
-} else {
-    plan (tests => 1);
-}
-
-print "# Test 1 - Loading Encode::RAD50\n";
-ok ($loaded);
-$loaded or exit;
-
-my $written = '';
-unless ($skip) {
-    open (my $fh, '>', \$written) or $skip = "PerlIO unsupported";
-    close $fh;
-}
-Encode::RAD50->silence_warnings (1);
-
-$test_num++;
-print "# Test $test_num - Put temp file in RAD50 mode.\n";
-{
-    $written = '';
-    $skip or open (my $fh, '>', \$written);
-    skip ($skip, binmode $fh, ":encoding(@{[ENCODING]})");
-    $skip or close $fh;
-}
-
-while (@tests) {
-    my $string = shift @tests;
-    my $value = shift @tests;
-    my $output = $string;
-##  my $bytes = length ($string) * 2 / 3;  # assumes $string a multiple of 3.
+while ( @tests ) {
+    my ( $string, $value ) = splice @tests, 0, 2;
+    ( my $output = $string ) =~ tr/A-Z0-9.$ /?/c;	# Unknown char
     my $tplt = 'n';		# 16 bits, big-endian. Assumes 3 chars only.
-    $output =~ tr/A-Z0-9.$ /?/c;
 
-    $test_num++;
-    print "# Test $test_num - '$string' should encode to $value.\n";
-    ok (unpack ($tplt, encode (ENCODING, $string)) == $value);
+    cmp_ok unpack( $tplt, encode( 'RAD50', $string ) ), '==', $value,
+	"'$string' should encode to $value.";
 
-    $test_num++;
-    print "# Test $test_num - $value should decode to '$output'.\n";
-    ok (decode (ENCODING, pack $tplt, $value) eq $output);
+    is decode( 'RAD50', pack $tplt, $value ), $output,
+	"$value should decode to '$output'.";
 
-    $test_num++;
-    print "# Test $test_num - Print '$string' to file, and check output.\n";
-    my ($buffer, $skip2) = ('0', $skip);
-    my $fh;
     my $written = '';
-    $skip2 or open ($fh, ">:encoding(@{[ENCODING]})", \$written)
-	or $skip2 = "Failed to open file: $!";
-    unless ($skip2) {
-	print $fh $string;
+    if ( open my $fh, '>:encoding(RAD50)', \$written ) {
+	print { $fh } $string;
 	close $fh;
-	$buffer = unpack ($tplt, $written);
+	cmp_ok unpack( $tplt, $written ), '==', $value,
+	"Print '$string' to file, and see if we got $value";
+    } else {
+	fail "Unable to open temp file for output: $!";
     }
-    print "#          File contained value $buffer\n";
-    print "#                Expected value $value\n";
-    skip ($skip2, $buffer == $value);
 
-    $test_num++;
-    print "# Test $test_num - Read file in @{[ENCODING]}, and check value.\n";
-    unless ($skip2) {
-	open ($fh, "<:encoding(@{[ENCODING]})", \$written)
-	    or $skip2 = "Failed to reopen file: $!";
-	$skip2 or read $fh, $buffer, length ($string);
+    if ( open my $fh, '<:encoding(RAD50)', \$written ) {
+	my $buffer = '0';
+	read $fh, $buffer, length $string;
 	close $fh;
+	is $buffer, $output,
+	    "Read $value from file and see if we got '$output'";
+    } else {
+	fail "Unable to open temp file for input: $!";
     }
-    skip ($skip2, $buffer eq $output);
 }
+
+done_testing;
 
 1;
+
+# ex: set textwidth=72 :

@@ -21,6 +21,11 @@
       ]
    },
    "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Test::More" : "0.88"
+         }
+      },
       "runtime" : {
          "requires" : {
             "Carp" : 0,
@@ -37,7 +42,7 @@
    "provides" : {
       "Encode::RAD50" : {
          "file" : "lib/Encode/RAD50.pm",
-         "version" : "0.006"
+         "version" : "0.007"
       }
    },
    "release_status" : "stable",
@@ -49,5 +54,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.006"
+   "version" : "0.007"
 }
