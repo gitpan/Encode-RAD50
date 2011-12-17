@@ -42,7 +42,7 @@
    "provides" : {
       "Encode::RAD50" : {
          "file" : "lib/Encode/RAD50.pm",
-         "version" : "0.007"
+         "version" : "0.008"
       }
    },
    "release_status" : "stable",
@@ -54,5 +54,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.007"
+   "version" : "0.008"
 }

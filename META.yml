@@ -19,7 +19,7 @@ no_index:
 provides:
   Encode::RAD50:
     file: lib/Encode/RAD50.pm
-    version: 0.007
+    version: 0.008
 requires:
   Carp: 0
   Encode: 0
@@ -32,4 +32,4 @@ requires:
 resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Encode-RAD50
   license: http://dev.perl.org/licenses/
-version: 0.007
+version: 0.008
