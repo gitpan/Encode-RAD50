@@ -22,7 +22,7 @@ Input is from STDIN, output to STDOUT. Valid options are:
   -uppercase
     folds input to upper case before conversion.
 
-Copyright 2005-2007, 2011 by Thomas R. Wyant, III
+Copyright 2005-2007, 2011-2012 by Thomas R. Wyant, III
 (F<wyant at cpan dot org>). All rights reserved.
 
 PDP-11, RSTS-11, RSTS/E,  RSX-11, RSX-11M+, P/OS and RT-11 are
