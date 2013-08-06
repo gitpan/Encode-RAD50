@@ -71,7 +71,7 @@ use warnings;
 
 use base qw{Encode::Encoding};
 
-our $VERSION = '0.009';
+our $VERSION = '0.010';
 
 use Carp;
 use Encode qw{:fallback_all};
@@ -81,7 +81,7 @@ use constant RADIX => 40;
 use constant MAX_WORD => RADIX * RADIX * RADIX;
 # use constant CARP_MASK => WARN_ON_ERR | DIE_ON_ERR;
 
-__PACKAGE__->Define ('RAD50', qr{^rad50$}i);
+__PACKAGE__->Define( 'RAD50' );
 
 my @r52asc = split '', ' ABCDEFGHIJKLMNOPQRSTUVWXYZ$.?0123456789';
 my %irad50;
@@ -255,7 +255,7 @@ Thomas R. Wyant, III (F<wyant at cpan dot org>)
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2005-2007, 2011-2012 by Thomas R. Wyant, III
+Copyright 2005-2007, 2011-2013 by Thomas R. Wyant, III
 (F<wyant at cpan dot org>). All rights reserved.
 
 PDP-11, RSTS-11, RSTS/E,  RSX-11, RSX-11M+, P/OS and RT-11 are

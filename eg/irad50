@@ -4,25 +4,77 @@ use strict;
 use warnings;
 
 use Encode::RAD50;
-use Getopt::Long;
+use Getopt::Long 2.33 qw{ :config auto_version };
+use Pod::Usage;
 
-my %opt;
+our $VERSION = '0.010';
 
-my $usage = <<EOD;
+my %opt = (
+    uppercase	=> 1,
+);
 
-Convert input to RAD50.
+GetOptions( \%opt,
+    qw{ quiet! uppercase|uc! },
+    help => sub { pod2usage( { -verbose => 2 } ) },
+) or pod2usage( { -verbose => 0 } );
 
-usage: irad50 [options]
+Encode::RAD50->silence_warnings ($opt{quiet});
 
-Input is from STDIN, output to STDOUT. Valid options are:
-  -help
-    displays this text;
-  -quiet
-    supresses warnings on invalid characters;
-  -uppercase
-    folds input to upper case before conversion.
+binmode (STDOUT, 'encoding(rad50)');
 
-Copyright 2005-2007, 2011-2012 by Thomas R. Wyant, III
+while (<>) {
+    $opt{uppercase}
+	and $_ = uc $_;
+    print;
+}
+
+__END__
+
+=head1 TITLE
+
+irad50 - Convert ASCII input to RAD50
+
+=head1 SYNOPSIS
+
+ irad50 <ascii.txt >rad50.dat
+ irad50 -help
+ irad50 -version
+
+=head1 OPTIONS
+
+=head2 -help
+
+This option displays the documentation for this script. The script then
+exits.
+
+=head2 -quiet
+
+If asserted, this option suppresses conversion warnings. The default is
+C<-noquiet>.
+
+=head2 -uppercase
+
+If asserted, this option causes the input to be converted to uppercase
+before conversion to RAD50. The default is C<-uppercase>, since RAD50
+does not have any representation for lower-case characters. But you can
+turn this off by specifying C<-nouppercase>.
+
+=head2 -version
+
+This option displays the version of this script. The script then exits.
+
+=head1 DETAILS
+
+This Perl script is essentially a Unix pipe, that reads ASCII on
+standard input, and converts it to RAD50 on standard output.
+
+=head1 AUTHOR
+
+Thomas R. Wyant, III F<wyant at cpan dot org>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2005-2007, 2011-2013 by Thomas R. Wyant, III
 (F<wyant at cpan dot org>). All rights reserved.
 
 PDP-11, RSTS-11, RSTS/E,  RSX-11, RSX-11M+, P/OS and RT-11 are
@@ -35,15 +87,7 @@ of the licenses in the directory LICENSES.
 This program is distributed in the hope that it will be useful, but
 without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
-EOD
 
-GetOptions (\%opt, qw{help quiet uppercase|uc}) or die $usage;
-$opt{help} and do {print $usage; exit};
-Encode::RAD50->silence_warnings ($opt{quiet});
+=cut
 
-binmode (STDOUT, 'encoding(rad50)');
-while (<>) {
-    $_ = uc $_ if $opt{uppercase};
-    print
-}
-
+# ex: set textwidth=72 :
