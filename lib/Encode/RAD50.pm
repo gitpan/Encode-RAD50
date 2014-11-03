@@ -71,7 +71,7 @@ use warnings;
 
 use base qw{Encode::Encoding};
 
-our $VERSION = '0.010';
+our $VERSION = '0.010_01';
 
 use Carp;
 use Encode qw{:fallback_all};
@@ -255,7 +255,7 @@ Thomas R. Wyant, III (F<wyant at cpan dot org>)
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2005-2007, 2011-2013 by Thomas R. Wyant, III
+Copyright 2005-2007, 2011-2014 by Thomas R. Wyant, III
 (F<wyant at cpan dot org>). All rights reserved.
 
 PDP-11, RSTS-11, RSTS/E,  RSX-11, RSX-11M+, P/OS and RT-11 are

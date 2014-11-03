@@ -1,3 +1,6 @@
+0.010_01	2014-11-03	T. R. Wyant
+  No code changes - just registering presence.
+
 0.010		2013-08-05	T. R. Wyant
   Get rid of Regexp alias qr{^rad50$}i, which is unneeded, and seems not
     to work as advertised.

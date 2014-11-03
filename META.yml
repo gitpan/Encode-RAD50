@@ -3,13 +3,13 @@ abstract: 'Convert to and from the Rad50 character set'
 author:
   - 'Tom Wyant (wyant at cpan dot org)'
 build_requires:
-  Test::More: 0.88
+  Test::More: '0.88'
 dynamic_config: 1
-generated_by: 'Module::Build version 0.4007, CPAN::Meta::Converter version 2.132140'
+generated_by: 'Module::Build version 0.421, CPAN::Meta::Converter version 2.142690'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
+  version: '1.4'
 name: Encode-RAD50
 no_index:
   directory:
@@ -19,17 +19,17 @@ no_index:
 provides:
   Encode::RAD50:
     file: lib/Encode/RAD50.pm
-    version: 0.010
+    version: 0.010_01
 requires:
-  Carp: 0
-  Encode: 0
-  Encode::Encoding: 0
-  base: 0
-  constant: 0
-  perl: 5.006002
-  strict: 0
-  warnings: 0
+  Carp: '0'
+  Encode: '0'
+  Encode::Encoding: '0'
+  base: '0'
+  constant: '0'
+  perl: '5.006002'
+  strict: '0'
+  warnings: '0'
 resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Encode-RAD50
   license: http://dev.perl.org/licenses/
-version: 0.010
+version: 0.010_01
