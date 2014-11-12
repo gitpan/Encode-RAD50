@@ -42,10 +42,10 @@
    "provides" : {
       "Encode::RAD50" : {
          "file" : "lib/Encode/RAD50.pm",
-         "version" : "0.010_01"
+         "version" : "0.011"
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
          "web" : "https://rt.cpan.org/Public/Dist/Display.html?Name=Encode-RAD50"
@@ -54,5 +54,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.010_01"
+   "version" : "0.011"
 }

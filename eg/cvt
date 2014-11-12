@@ -10,7 +10,7 @@ use Encode::Rad50;
 use Getopt::Long 2.33 qw{ :config auto_version };
 use Pod::Usage;
 
-our $VERSION = '0.010_01';
+our $VERSION = '0.011';
 
 my %opt;
 
